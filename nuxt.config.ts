@@ -1,7 +1,6 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     devtools: {enabled: true},
-    modules: ['@nuxtjs/mdc'],
+    modules: ['nuxt-markdown-render'],
     extends: [
         ['github:Kazkovy-Kit/ui', {install: true}],
     ]
