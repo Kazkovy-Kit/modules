@@ -37,7 +37,7 @@ async function enable(module: ExtendedModuleInfo) {
       <DialogHeader>
         <DialogTitle>{{ t('title', {module: t(`modules.${module.id}.name`)}) }}</DialogTitle>
         <DialogDescription class="prose text-primary prose-strong:text-primary prose-strong:font-bolder">
-          <NuxtMarkdown :source="t(`modules.${module.id}.description`)" tag="p" />
+          <p v-html="t(`modules.${module.id}.description`)"/>
         </DialogDescription>
       </DialogHeader>
 
