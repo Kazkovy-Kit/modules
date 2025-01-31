@@ -16,3 +16,13 @@ export type LocalModuleInfo = {
 }
 
 export type ExtendedModuleInfo = ModuleInfo & LocalModuleInfo
+
+export type BotInfo = {
+    id: number
+    discord_id: string,
+    host: string,
+    icon: string,
+    name: string,
+    token: string,
+    online: boolean
+}

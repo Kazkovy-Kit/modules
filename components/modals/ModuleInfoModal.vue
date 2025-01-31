@@ -37,7 +37,7 @@ async function enable(module: ExtendedModuleInfo) {
       <DialogHeader>
         <DialogTitle>{{ t('title', {module: t(`modules.${module.id}.name`)}) }}</DialogTitle>
         <DialogDescription class="prose text-primary prose-strong:text-primary prose-strong:font-bolder">
-          <p v-html="t(`modules.${module.id}.description`)"/>
+          <p class="!text-primary prose p-2" v-html="t(`modules.${module.id}.description`)"/>
         </DialogDescription>
       </DialogHeader>
 

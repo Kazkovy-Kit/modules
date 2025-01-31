@@ -1,7 +1,5 @@
 <template>
-  <DashboardLayout>
-    <template #modules>
-      <ModulesList />
-    </template>
-  </DashboardLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>

@@ -1,4 +1,5 @@
 export default defineAppConfig({
+    dev: true,
     modules: [
         {
             id: 'test',

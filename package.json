@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "main": "./nuxt.config.ts",
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "nuxi dev .playground",
     "dev:prepare": "nuxt prepare .playground",
@@ -19,5 +20,8 @@
     "vue": "latest"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
-  "dependencies": {}
+  "dependencies": {
+    "@kazkovy-kit/ui": "^0.1.9",
+    "@prisma/nuxt": "^0.3.0"
+  }
 }

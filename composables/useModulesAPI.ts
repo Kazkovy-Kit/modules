@@ -3,7 +3,11 @@ import type {ModuleInfo, LocalModuleInfo} from "../types";
 export const useModulesAPI = function (dashboardModules: LocalModuleInfo[] = []) {
 
     const modules = useAsyncData<ModuleInfo[]>("modules", () => $fetch(`/api/modules`), {
-        default: () => dashboardModules,
+        default: () => dashboardModules.map(module => ({
+            id: module.id,
+            name: module.id,
+            enabled: false
+        })),
         immediate: false,
         dedupe: 'defer'
     });
