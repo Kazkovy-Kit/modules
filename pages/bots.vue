@@ -37,11 +37,11 @@ const deleteBot = async (bot: BotInfo) => {
   loading.value = false
   toast({
     variant: "success",
-    title: "Успішно",
-    description: "Зміни успішно збережені"
+    title: t('alerts.success'),
+    description: t('alert.deleted')
   })
 }
-const onBotUpdated = async() => {
+const onBotUpdated = async () => {
   showFormModal.value = false
   botForEditing.value = undefined
   await bots.value.refresh()
@@ -61,16 +61,14 @@ const onBotUpdated = async() => {
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <div
+        <Button
             :disabled="loading || !bot.online"
+            :loading="loading"
             :class="{'hover:cursor-not-allowed': !bot.online}"
             v-for="(bot, index) in bots.data"
             :key="bot.id"
-            class="group relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 hover:cursor-pointer"
+            class="group w-full h-full p-0 relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 hover:cursor-pointer"
         >
-          <Icon name="lucide:loader-circle"
-                class="absolute z-20 inset-0 h-2/4 animate-spin self-center w-full object-cover text-gray-300 border-gray-700"
-                v-if="loading"/>
 
           <img
               :src="bot.icon"
@@ -96,7 +94,7 @@ const onBotUpdated = async() => {
               </h3>
 
               <div class="gap-2 hidden group-hover:flex">
-                <Button variant="outline" @click="showForm(bot)">
+                <Button variant="secondary" @click="showForm(bot)">
                   <Icon name="lucide:pencil"/>
                 </Button>
                 <Button variant="destructive" @click="deleteBot(bot)">
@@ -106,11 +104,11 @@ const onBotUpdated = async() => {
 
             </div>
           </div>
-        </div>
+        </Button>
 
         <!-- Custom Bot Request Block -->
         <button
-            @click="showForm(null)"
+            @click="showForm()"
             class="relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 bg-primary text-secondary"
         >
           <div
@@ -136,13 +134,19 @@ const onBotUpdated = async() => {
     "welcome": "Welcome",
     "description": "Please choose your bot, or add a new one",
     "add_own_bot": "Add your own bot",
-    "offline": "Offline"
+    "offline": "Offline",
+    "alert": {
+      "deleted": "Bot was successfully removed from database"
+    }
   },
   "uk": {
     "welcome": "Вітаємо",
     "description": "Будь ласка оберіть бота або створіть свого",
     "add_own_bot": "Додайте власного бота",
-    "offline": "Виключений"
+    "offline": "Виключений",
+    "alert": {
+      "deleted": "Ви успішно видалили бота із бази даних"
+    }
   }
 }
 </i18n>
