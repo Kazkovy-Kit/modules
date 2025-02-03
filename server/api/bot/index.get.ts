@@ -1,8 +1,8 @@
-import prisma from "../../lib/prisma";
+import type {BotConfig} from "@prisma/client";
+import prisma from "../../../lib/prisma";
 
 export default defineEventHandler(async (event) => {
     const botId = parseInt(getCookie(event, 'selected:bot') ?? '')
-
 
     const config = useAppConfig()
 
@@ -21,9 +21,8 @@ export default defineEventHandler(async (event) => {
     }
 
     return (await prisma.botConfig.findMany())
-        .map((botConfig) => ({
-            ...botConfig,
-            guildSum: Number(botConfig.guildSum)
+        .map((botConfig: BotConfig) => ({
+            ...botConfig
         }))
-        .find(bot => bot.id === botId)
+        .find((bot: BotConfig) => bot.id === botId) ?? null
 });

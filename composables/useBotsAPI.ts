@@ -1,4 +1,5 @@
 import type {BotInfo} from "../types";
+import type {AsyncDataExecuteOptions} from "#app/composables/asyncData";
 
 export const useBotsApi = function () {
 
@@ -8,29 +9,43 @@ export const useBotsApi = function () {
         dedupe: 'defer'
     })
 
-    const currentBotId = useCookie<number | undefined>('selected:bot')
+    const currentBotId = useCookie<number | null>('selected:bot')
 
-    const currentBot = useAsyncData<BotInfo | null>('bot', () => currentBotId.value ? $fetch('/api/bot') : Promise.resolve(null), {
+    const {
+        data: currentBotData,
+        execute: fetchCurrentBot,
+        refresh: refreshCurrentBot
+    } = useAsyncData<BotInfo | null>('bot', () => $fetch('/api/bot'), {
         dedupe: 'defer',
+        immediate: false,
         default: () => null,
-        watch: [currentBotId]
     })
+
+
+    const currentBot = useState<BotInfo | null>('current:bot', () => currentBotData.value)
+
 
     return {
         bots: computed(() => ({
             data: bots.data.value,
             status: bots.status,
-            fetch: bots.execute
+            fetch: bots.execute,
+            refresh: bots.refresh,
         })),
         currentBot: computed(() => ({
-            ...currentBot.data.value,
-            status: currentBot.status,
-            fetch: currentBot.execute,
-            select: (id: number) => {
+            ...currentBot.value,
+            fetch: async (ops: AsyncDataExecuteOptions = {}) => {
+                await fetchCurrentBot(ops)
+                currentBot.value = currentBotData.value
+            },
+            select: async (id: number, ops: AsyncDataExecuteOptions = {}) => {
                 currentBotId.value = id
+                await fetchCurrentBot(ops)
+                currentBot.value = currentBotData.value
             },
             reset: () => {
-                currentBotId.value = undefined
+                currentBotId.value = null
+                currentBot.value = null
             }
         })),
     }

@@ -1,8 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const {currentBot} = useBotsApi();
-    await currentBot.value.fetch()
-    if (!currentBot.value.id) {
-        navigateTo({name: 'bots'});
-        return
+    if (currentBot.value.id === undefined) {
+        return navigateTo({name: 'bots'});
     }
 });

@@ -8,11 +8,9 @@ datasource db {
 }
 
 model BotConfig {
-  id         Int    @id @default(autoincrement())
-  discord_id String
-  host       String
-  name       String
-  icon       String
-  token      String
-  guildSum   BigInt @default(0)
+  id    Int     @id @default(autoincrement())
+  host  String
+  name  String
+  icon  String
+  token String?
 }

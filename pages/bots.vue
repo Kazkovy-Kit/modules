@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import BotFormModal from "../components/modals/BotFormModal.vue";
+import type {BotInfo} from "../types";
+
 definePageMeta({
   middleware: ['not-selected-bot']
 })
@@ -11,13 +14,38 @@ const {t} = useI18n({
   useScope: 'local'
 })
 
-const submitSelection = (id: number) => {
-  currentBot.value.select(id);
+const botForEditing = ref<BotInfo | undefined>(undefined)
+const showFormModal = ref(false)
+
+const submitSelection = async (id: number) => {
+  await currentBot.value.select(id);
   loading.value = true;
-  router.push({
+  await router.push({
     name: 'index'
   })
 };
+const showForm = (bot: BotInfo | undefined = undefined) => {
+  botForEditing.value = bot
+  showFormModal.value = true
+}
+const deleteBot = async (bot: BotInfo) => {
+  loading.value = true
+  await $fetch(`api/bot/${bot.id}`, {
+    method: "DELETE"
+  })
+  await bots.value.refresh()
+  loading.value = false
+  toast({
+    variant: "success",
+    title: "Успішно",
+    description: "Зміни успішно збережені"
+  })
+}
+const onBotUpdated = async() => {
+  showFormModal.value = false
+  botForEditing.value = undefined
+  await bots.value.refresh()
+}
 </script>
 
 <template>
@@ -33,21 +61,21 @@ const submitSelection = (id: number) => {
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <button
+        <div
             :disabled="loading || !bot.online"
             :class="{'hover:cursor-not-allowed': !bot.online}"
             v-for="(bot, index) in bots.data"
             :key="bot.id"
-            @click="submitSelection(bot.id)"
-            class="relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300"
+            class="group relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 hover:cursor-pointer"
         >
           <Icon name="lucide:loader-circle"
                 class="absolute z-20 inset-0 h-2/4 animate-spin self-center w-full object-cover text-gray-300 border-gray-700"
                 v-if="loading"/>
+
           <img
               :src="bot.icon"
               :alt="bot.name"
-              class="absolute inset-0 h-full w-full object-cover"
+              class="h-full w-full object-cover"
               :class="{'opacity-15': loading}"
           />
 
@@ -56,34 +84,47 @@ const submitSelection = (id: number) => {
             <Icon name="lucide:power-off" class="w-24 h-24"/>
             <span class="text-4xl">{{ t('offline') }}</span>
           </div>
+
           <div
               class="absolute inset-0 bg-black bg-opacity-40 p-4 flex flex-col justify-between"
               :class="{'opacity-15': loading}"
+              @click.self="submitSelection(bot.id)"
           >
             <div class="flex justify-between items-start">
               <h3 class="text-white text-xl font-semibold">
                 {{ bot.name }}
               </h3>
+
+              <div class="gap-2 hidden group-hover:flex">
+                <Button variant="outline" @click="showForm(bot)">
+                  <Icon name="lucide:pencil"/>
+                </Button>
+                <Button variant="destructive" @click="deleteBot(bot)">
+                  <Icon name="lucide:trash"/>
+                </Button>
+              </div>
+
             </div>
           </div>
-        </button>
+        </div>
 
         <!-- Custom Bot Request Block -->
         <button
-            disabled
-            class="relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 bg-primary/10 hover:bg-primary/20 hover:cursor-not-allowed"
+            @click="showForm(null)"
+            class="relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 bg-primary text-secondary"
         >
           <div
-              class="absolute inset-0 p-4 flex flex-col items-center justify-center opacity-15"
+              class="absolute inset-0 p-4 flex flex-col items-center justify-center"
           >
-            <Icon name="lucide:plus" class="h-12 w-12 text-primary mb-2"/>
+            <Icon name="lucide:plus" class="h-12 w-12 mb-2"/>
             <h3
-                class="text-primary text-xl font-semibold text-center"
+                class="text-xl font-semibold text-center"
             >
               {{ t('add_own_bot') }}
             </h3>
           </div>
         </button>
+        <BotFormModal v-if="showFormModal" @updated="onBotUpdated" @close="showFormModal = false" :bot="botForEditing"/>
       </div>
     </div>
   </div>
