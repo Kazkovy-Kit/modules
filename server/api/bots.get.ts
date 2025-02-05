@@ -1,6 +1,8 @@
 import prisma from "../../lib/prisma";
 
 export default defineEventHandler(async (event) => {
+    await requireUserSession(event);
+
     const config = useAppConfig()
 
     if (config.dev) {
@@ -11,7 +13,6 @@ export default defineEventHandler(async (event) => {
                 host: 'fake-host.com',
                 icon: 'https://psverso.com.br/wp-content/uploads/2021/08/hydra-bot-1024x1024.png',
                 name: 'Fake Bot',
-                token: 'fake token',
                 online: true
             }
         ]
@@ -24,7 +25,6 @@ export default defineEventHandler(async (event) => {
 
     return botConfigs.map((botConfig, key) => ({
         ...botConfig,
-        guildSum: Number(botConfig.guildSum),
         online: pings[key]
     }))
 });

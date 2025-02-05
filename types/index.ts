@@ -26,3 +26,43 @@ export type BotInfo = {
     token: string,
     online: boolean
 }
+
+export type BotGuildResponse = {
+    [key: string]: {
+        id: string;
+        name: string;
+    }
+}
+
+export type DiscordUserGuildResponse = Array<{
+    id: string;
+    name: string;
+    icon: string;
+    banner: string;
+    owner: boolean;
+    permissions: number;
+    permissions_new: string;
+    features: any[];
+}>
+
+export type BotAuthResponse = {
+    token: string,
+    user: {
+        id: string,
+        username: string
+    }
+}
+
+export type GuildInfo = {
+    id: number,
+    logo: string,
+    name: string,
+}
+
+
+declare module '#auth-utils' {
+
+    interface SecureSessionData {
+        bot_token: string
+    }
+}

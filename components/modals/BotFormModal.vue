@@ -19,11 +19,13 @@ const form = useForm({
   validationSchema: toTypedSchema(z.object({
     name: z.string(),
     icon: z.string().url(),
+    discord_id: z.string(),
     host: z.string().url()
   })),
   initialValues: {
     name: props.bot?.name,
     icon: props.bot?.icon,
+    discord_id: props.bot?.discord_id,
     host: props.bot?.host ?? "http://127.0.0.1:8080/",
   }
 })
@@ -118,6 +120,19 @@ const onSubmit = form.handleSubmit(async (values: any) => {
           </FormItem>
         </Field>
 
+        <Field v-slot="{componentField}" name="discord_id">
+          <FormItem>
+            <FormLabel>
+              {{ t('discord_id.name') }}
+            </FormLabel>
+            <Input type="text" v-bind="componentField"/>
+            <FormMessage/>
+            <FormDescription>
+              {{ t('discord_id.description') }}
+            </FormDescription>
+          </FormItem>
+        </Field>
+
         <Field v-slot="{componentField}" name="host">
           <FormItem>
             <FormLabel>
@@ -187,6 +202,9 @@ const onSubmit = form.handleSubmit(async (values: any) => {
     "name": {
       "name": "Name"
     },
+    "discord_id": {
+      "name": "Discord Client ID"
+    },
     "alert": {
       "added": "Bot was successfully added to database",
       "updated": "Bot was successfully updated"
@@ -209,6 +227,9 @@ const onSubmit = form.handleSubmit(async (values: any) => {
     },
     "name": {
       "name": "Назва"
+    },
+    "discord_id": {
+      "name": "Discord Client ID"
     },
     "alert": {
       "added": "Бот був успішно доданий до бази",

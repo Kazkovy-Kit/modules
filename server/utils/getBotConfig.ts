@@ -29,5 +29,8 @@ export const getBotConfig = async (event: H3Event) => {
         });
     }
 
-    return data;
+    return {
+        ...data,
+        host: data.host.replace(/\/$|$/, '/')
+    };
 }

@@ -6,8 +6,10 @@ definePageMeta({
   middleware: ['not-selected-bot']
 })
 
-const {bots, currentBot} = useBotsApi()
-await bots.value.fetch()
+const {bots, currentBot} = useBotsStore()
+
+await bots.fetch()
+
 const loading = ref(false)
 const router = useRouter()
 const {t} = useI18n({
@@ -18,11 +20,21 @@ const botForEditing = ref<BotInfo | undefined>(undefined)
 const showFormModal = ref(false)
 
 const submitSelection = async (id: number) => {
-  await currentBot.value.select(id);
   loading.value = true;
-  await router.push({
-    name: 'index'
-  })
+  try {
+    await $fetch(`api/bot/${id}/auth`)
+    await currentBot.select(id);
+    await router.push({
+      name: 'index'
+    })
+  } catch (e) {
+    toast({
+      variant: 'destructive',
+      title: t('alerts.error'),
+      description: String(e)
+    })
+  }
+  loading.value = false;
 };
 const showForm = (bot: BotInfo | undefined = undefined) => {
   botForEditing.value = bot
@@ -33,7 +45,7 @@ const deleteBot = async (bot: BotInfo) => {
   await $fetch(`api/bot/${bot.id}`, {
     method: "DELETE"
   })
-  await bots.value.refresh()
+  await bots.fetch()
   loading.value = false
   toast({
     variant: "success",
@@ -44,7 +56,7 @@ const deleteBot = async (bot: BotInfo) => {
 const onBotUpdated = async () => {
   showFormModal.value = false
   botForEditing.value = undefined
-  await bots.value.refresh()
+  await bots.fetch()
 }
 </script>
 
@@ -65,7 +77,7 @@ const onBotUpdated = async () => {
             :disabled="loading || !bot.online"
             :loading="loading"
             :class="{'hover:cursor-not-allowed': !bot.online}"
-            v-for="(bot, index) in bots.data"
+            v-for="(bot, index) in bots.list"
             :key="bot.id"
             class="group w-full h-full p-0 relative aspect-square rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-300 hover:cursor-pointer"
         >

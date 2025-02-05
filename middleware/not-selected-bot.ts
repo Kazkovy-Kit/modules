@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const {currentBot} = useBotsApi();
-    if (currentBot.value.id) {
-        return navigateTo({name: 'index'});
+    const {currentBot} = useBotsStore(useNuxtApp().$pinia);
+    if (currentBot.data && currentBot.data.id) {
+        return navigateTo({name: 'index'})
     }
 });

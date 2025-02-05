@@ -2,6 +2,8 @@ import type {BotConfig} from "@prisma/client";
 import prisma from "../../../lib/prisma";
 
 export default defineEventHandler(async (event) => {
+    await requireUserSession(event)
+
     const botId = parseInt(getCookie(event, 'selected:bot') ?? '')
 
     const config = useAppConfig()
@@ -24,5 +26,5 @@ export default defineEventHandler(async (event) => {
         .map((botConfig: BotConfig) => ({
             ...botConfig
         }))
-        .find((bot: BotConfig) => bot.id === botId) ?? null
+        .find((bot: BotConfig) => bot.id === botId)
 });

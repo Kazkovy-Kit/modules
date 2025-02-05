@@ -14,6 +14,8 @@ const appConfig = useAppConfig()
 const modulesList: LocalModuleInfo[] = appConfig.modules || [] as LocalModuleInfo[]
 const {modules: guildModules} = useModulesAPI(modulesList)
 
+const {currentGuild} = useGuildsStore()
+
 
 if (props.fetchGuildModules) {
   await guildModules.fetch()
@@ -35,6 +37,13 @@ function showModule(module: ExtendedModuleInfo) {
 </script>
 
 <template>
+  <Alert v-if="!currentGuild.data" variant="destructive"
+         class="mt-4 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:hidden">
+    <AlertTitle>{{ t('alerts.error') }}.</AlertTitle>
+    <AlertDescription>
+      {{ t('no_modules_found') }}.
+    </AlertDescription>
+  </Alert>
 
   <Alert v-if="!modulesList.length" variant="destructive"
          class="mt-4 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:hidden">
@@ -52,7 +61,7 @@ function showModule(module: ExtendedModuleInfo) {
     </AlertDescription>
   </Alert>
 
-  <template v-for="module in modules">
+  <template v-for="module in modules" v-if="currentGuild.data">
     <SidebarMenuButton
         v-if="!module.enabled"
         :tooltip="t(`modules.${module.id}.name`)"

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-const {currentBot} = useBotsApi()
+const {currentBot} = useBotsStore()
 const emits = defineEmits(['reset'])
 const {t} = useI18n()
 
 async function resetSelectedBot() {
-  await currentBot.value.reset()
-  emits('reset')
+  await currentBot.reset()
+  await nextTick(() => {
+    emits('reset')
+  })
 }
 </script>
 

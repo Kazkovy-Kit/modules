@@ -8,9 +8,18 @@ datasource db {
 }
 
 model BotConfig {
-  id    Int     @id @default(autoincrement())
-  host  String
-  name  String
-  icon  String
-  token String?
+  id             Int              @id @default(autoincrement())
+  host           String
+  discord_id     String
+  name           String
+  icon           String
+  BotAccessToken BotAccessToken[]
+}
+
+model BotAccessToken {
+  id          Int       @id @default(autoincrement())
+  user_id     String
+  bot_config  BotConfig @relation(fields: [botConfigId], references: [id])
+  token       String
+  botConfigId Int
 }
