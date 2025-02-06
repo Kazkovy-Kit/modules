@@ -11,8 +11,8 @@ const emit = defineEmits(['close'])
 const {t} = useI18n()
 const loading = ref(false)
 const appConfig = useAppConfig()
-const modulesList: LocalModuleInfo[] = appConfig.modules || []
-const {module: moduleFactory, modules} = useModulesAPI(modulesList)
+const modulesList = appConfig.modules || []
+const {module: moduleFactory, modules} = useModulesStore()
 
 async function enable(module: ExtendedModuleInfo) {
   loading.value = true
@@ -25,7 +25,7 @@ async function enable(module: ExtendedModuleInfo) {
     description: t(`enabled`, {module: t(`modules.${module.id}.name`)}),
   })
 
-  await modules.refresh()
+  await modules.fetch()
   emit('close')
 
 }

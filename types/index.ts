@@ -60,6 +60,13 @@ export type GuildInfo = {
     name: string,
 }
 
+export type BotModuleResponse = {
+    [key: string]: {
+        id: string;
+        enabled: boolean;
+    };
+};
+
 
 declare module '#auth-utils' {
 

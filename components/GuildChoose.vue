@@ -3,13 +3,11 @@ import {range} from "@antfu/utils";
 
 const {currentBot} = useBotsStore()
 const {currentGuild, guilds} = useGuildsStore()
-const {t} = useI18n({
-  useScope: 'local'
-})
+const {t} = useI18n()
 
 const notSelectedGuilds = computed(() => guilds.list.filter(guild => currentGuild.data ? guild.id !== currentGuild.data.id : true) ?? [])
-currentGuild.fetch()
 
+currentGuild.fetch()
 
 async function onOpen(v: boolean) {
   if (v) {

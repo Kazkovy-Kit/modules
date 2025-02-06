@@ -12,6 +12,7 @@ type DiscordUserGuildResponse = Array<{
 export default defineEventHandler(async (event) => {
     await requireUserSession(event);
     const guildId = getCookie(event, 'selected:guild');
+    if(!guildId) return null;
 
     return await callBotAPI(event, `guilds/${guildId}`)
 });

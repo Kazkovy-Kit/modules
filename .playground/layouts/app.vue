@@ -1,9 +1,10 @@
 <script setup lang="ts">
 const router = useRouter()
+const {currentGuild} = useGuildsStore()
 
 async function handleResetBot() {
+  await currentGuild.reset()
   await router.push({name: 'bots'})
-  console.log('bots redirect')
 }
 </script>
 
