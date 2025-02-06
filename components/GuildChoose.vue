@@ -41,7 +41,7 @@ async function openInstall() {
           <Avatar class="h-6 w-6 rounded-lg">
             <AvatarImage
                 v-if="currentGuild.data"
-                :src="currentGuild.data.logo ?? ''"
+                :src="currentGuild.data.icon ?? ''"
                 :alt="currentGuild.data.name"
             />
           </Avatar>
@@ -87,7 +87,6 @@ async function openInstall() {
         <Skeleton class="w-full h-6 rounded-lg"/>
       </DropdownMenuItem>
 
-
       <DropdownMenuItem
           v-else-if="notSelectedGuilds.length"
           v-for="guild in notSelectedGuilds"
@@ -99,7 +98,7 @@ async function openInstall() {
             class="flex size-6 items-center justify-center rounded-sm border"
         >
           <Avatar class="h-6 w-6 rounded-lg">
-            <AvatarImage :src="guild.logo" :alt="guild.name"/>
+            <AvatarImage :src="guild.icon" :alt="guild.name"/>
           </Avatar>
         </div>
         {{ guild.name }}

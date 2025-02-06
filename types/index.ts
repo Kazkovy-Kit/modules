@@ -31,6 +31,7 @@ export type BotGuildResponse = {
     [key: string]: {
         id: string;
         name: string;
+        icon: string;
     }
 }
 
@@ -55,7 +56,7 @@ export type BotAuthResponse = {
 
 export type GuildInfo = {
     id: number,
-    logo: string,
+    icon: string,
     name: string,
 }
 
